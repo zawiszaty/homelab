@@ -1,0 +1,28 @@
+- name: Ensure media directories exist
+  file:
+    path: "{{ remote_dir }}/{{ item }}"
+    state: directory
+    owner: zawiszaty
+    group: zawiszaty
+    mode: "0755"
+  loop:
+    - immich
+    - immich/library
+    - immich/postgres
+
+- name: Copy docker-compose.yml
+  copy:
+    src: ../immich/docker-compose.yml
+    dest: "{{ remote_dir }}/immich/docker-compose.yml"
+    mode: "0755"
+
+- name: Copy .env
+  copy:
+    src: ../immich/.env
+    dest: "{{ remote_dir }}/immich/.env"
+    mode: "0755"
+
+- name: Docker compose up -d
+  command: docker compose up -d --force-recreate
+  args:
+    chdir: "{{ remote_dir }}/immich"

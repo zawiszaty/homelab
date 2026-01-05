@@ -1,0 +1,43 @@
+- name: Ensure media directories exist
+  file:
+    path: "{{ remote_dir }}/{{ item }}"
+    state: directory
+    owner: "{{ remote_user }}"
+    group: "{{ remote_user }}"
+    mode: "0755"
+  loop:
+    - "infrastructure"
+    - "infrastructure/nginx_proxy/data"
+    - "infrastructure/nginx_proxy/letsencrypt"
+    - "infrastructure/authentik/media"
+    - "infrastructure/authentik/custom-templates"
+    - "infrastructure/authentik/database"
+    - "infrastructure/authentik/certs"
+
+- name: Copy infrastructure docker-compose.yml
+  copy:
+    src: "{{ playbook_dir }}/../infrastructure/docker-compose.yml"
+    dest: "{{ infrastructure_dir }}/docker-compose.yml"
+    mode: "0755"
+
+- name: Write infrastructure .env
+  template:
+    src: "{{ playbook_dir }}/templates/infrastructure.env.j2"
+    dest: "{{ infrastructure_dir }}/.env"
+    mode: "0755"
+
+- name: Docker compose up -d (infrastructure)
+  command: docker compose up -d --force-recreate
+  args:
+    chdir: "{{ infrastructure_dir }}"
+
+- name: Copy whole observability directory
+  copy:
+    src: "{{ playbook_dir }}/../infrastructure/observability/"
+    dest: "{{ infrastructure_dir }}/observability"
+    mode: "0755"
+
+- name: Docker compose up -d (observability)
+  command: docker compose up -d --force-recreate
+  args:
+    chdir: "{{ infrastructure_dir }}/observability"

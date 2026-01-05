@@ -1,0 +1,4 @@
+remote_dir: /mnt/storage
+remote_user: <user>
+authentik_pg_pass: "" // openssl rand -base64 36 | tr -d '\n'
+authentik_secret_key: "" // openssl rand -base64 60 | tr -d '\n'

@@ -1,0 +1,45 @@
+- name: Ensure media directories exist
+  file:
+    path: "{{ remote_dir }}/{{ item }}"
+    state: directory
+    owner: "{{ remote_user }}"
+    group: "{{ remote_user }}"
+    mode: "0755"
+  loop:
+    - downloads
+    - tv
+    - movies
+    - sonarr/data
+    - radarr/data
+    - prowlarr/data
+    - qbittorrent/data
+    - jellyfin/data
+    - bazarr/data
+    - jellyseerr/data
+    - jellyseerr/jelly-bridge
+
+- name: Copy docker-compose.yml
+  copy:
+    src: ../media/docker-compose.yml
+    dest: "{{ remote_dir }}/docker-compose.yml"
+    mode: "0644"
+
+- name: Docker compose up -d
+  command: docker compose up -d --force-recreate
+  args:
+    chdir: "{{ remote_dir }}"
+
+- name: Clone flare-bypasser repository
+  git:
+    repo: https://github.com/yoori/flare-bypasser.git
+    dest: "{{ remote_dir }}/flare-bypasser"
+    version: main
+    update: true
+
+- name: Docker compose up -d (flare-bypasser)
+  command: docker compose up -d --force-recreate
+  args:
+    chdir: "{{ remote_dir }}/flare-bypasser"
+
+- name: Change settings for user_watches
+  command: echo fs.inotify.max_user_watches=1048576 | sudo tee -a /etc/sysctl.d/40-max-user-watches.conf && sudo sysctl -p
