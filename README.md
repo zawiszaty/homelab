@@ -44,6 +44,15 @@ Requires Ansible and SSH access to the hosts listed in the inventory.
   `remote_user`, and Authentik secrets.
 - `ansible/inventory.ini` controls the `servers` and `workers` host groups.
 - Some services expect local ports and disks to be available on the target hosts.
+- Samba is installed directly on the `nas` host as a system service (not a container) via `ansible/samba.yml`.
+
+## Samba (system-level on NAS)
+
+1) In `ansible/group_vars/all.yml`, set:
+- `samba_user`
+- `samba_password`
+- `samba_shares` (paths to export over SMB)
+2) Run `./run.sh` to apply playbooks including Samba setup.
 
 ## Typical flow
 

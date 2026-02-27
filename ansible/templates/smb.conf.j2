@@ -1,0 +1,25 @@
+[global]
+   workgroup = {{ samba_workgroup | default('WORKGROUP') }}
+   server string = {{ samba_server_string | default('Homelab NAS') }}
+   server role = standalone server
+   map to guest = Bad User
+   obey pam restrictions = yes
+   unix password sync = yes
+   passwd program = /usr/bin/passwd %u
+   pam password change = yes
+
+{% for share in samba_shares | default([]) %}
+[{{ share.name }}]
+   path = {{ share.path }}
+   browseable = {{ share.browseable | default('yes') }}
+   read only = {{ share.read_only | default('no') }}
+   guest ok = {{ share.guest_ok | default('no') }}
+   create mask = {{ share.create_mask | default('0664') }}
+   directory mask = {{ share.directory_mask | default('0775') }}
+{% if share.valid_users is defined %}
+   valid users = {{ share.valid_users }}
+{% else %}
+   valid users = {{ samba_user | default(remote_user) }}
+{% endif %}
+
+{% endfor %}

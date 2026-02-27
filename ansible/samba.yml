@@ -1,0 +1,65 @@
+- name: Configure Samba on NAS
+  hosts: nas
+  become: true
+
+  tasks:
+    - name: Validate Samba password is provided
+      fail:
+        msg: "Set samba_password in ansible/group_vars/all.yml before running Samba setup."
+      when: (samba_password | default('') | length) == 0
+
+    - name: Install Samba packages
+      apt:
+        name:
+          - samba
+          - smbclient
+        state: present
+        update_cache: true
+
+    - name: Ensure Samba user exists on system
+      user:
+        name: "{{ samba_user | default(remote_user) }}"
+        state: present
+
+    - name: Ensure Samba share directories exist
+      file:
+        path: "{{ item.path }}"
+        state: directory
+        owner: "{{ item.owner | default(remote_user) }}"
+        group: "{{ item.group | default(remote_user) }}"
+        mode: "{{ item.mode | default('0775') }}"
+      loop: "{{ samba_shares | default([]) }}"
+
+    - name: Configure Samba
+      template:
+        src: templates/smb.conf.j2
+        dest: /etc/samba/smb.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart Samba
+
+    - name: Ensure Samba password for user is set
+      shell: |
+        set -euo pipefail
+        if pdbedit -L | cut -d: -f1 | grep -qx "{{ samba_user | default(remote_user) }}"; then
+          exit 0
+        fi
+        printf '%s\n%s\n' "{{ samba_password }}" "{{ samba_password }}" | smbpasswd -a -s "{{ samba_user | default(remote_user) }}"
+      args:
+        executable: /bin/bash
+
+    - name: Enable and start Samba services
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      loop:
+        - smbd
+        - nmbd
+
+  handlers:
+    - name: Restart Samba
+      systemd:
+        name: smbd
+        state: restarted

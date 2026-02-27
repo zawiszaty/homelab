@@ -2,3 +2,12 @@ remote_dir: /mnt/storage
 remote_user: <user>
 authentik_pg_pass: "" // openssl rand -base64 36 | tr -d '\n'
 authentik_secret_key: "" // openssl rand -base64 60 | tr -d '\n'
+samba_user: "<user>"
+samba_password: "" # set this in all.yml before enabling Samba
+samba_workgroup: "WORKGROUP"
+samba_server_string: "Homelab NAS"
+samba_shares:
+  - name: "storage"
+    path: "{{ remote_dir }}"
+    read_only: "no"
+    guest_ok: "no"
