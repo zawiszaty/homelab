@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: "docker"
+  - package-ecosystem: "docker-compose"
     directory: "/media"
     schedule:
       interval: "weekly"
@@ -9,7 +9,7 @@ updates:
       - "dependencies"
       - "docker"
 
-  - package-ecosystem: "docker"
+  - package-ecosystem: "docker-compose"
     directory: "/infrastructure"
     schedule:
       interval: "weekly"
@@ -18,7 +18,7 @@ updates:
       - "dependencies"
       - "docker"
 
-  - package-ecosystem: "docker"
+  - package-ecosystem: "docker-compose"
     directory: "/infrastructure/observability"
     schedule:
       interval: "weekly"
@@ -27,7 +27,7 @@ updates:
       - "dependencies"
       - "docker"
 
-  - package-ecosystem: "docker"
+  - package-ecosystem: "docker-compose"
     directory: "/immich"
     schedule:
       interval: "weekly"
@@ -36,7 +36,7 @@ updates:
       - "dependencies"
       - "docker"
 
-  - package-ecosystem: "docker"
+  - package-ecosystem: "docker-compose"
     directory: "/workers"
     schedule:
       interval: "weekly"
