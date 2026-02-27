@@ -45,6 +45,8 @@ Requires Ansible and SSH access to the hosts listed in the inventory.
 - `ansible/inventory.ini` controls the `servers` and `workers` host groups.
 - Some services expect local ports and disks to be available on the target hosts.
 - Samba is installed directly on the `nas` host as a system service (not a container) via `ansible/samba.yml`.
+- Grafana is UI-managed (`grafana_data` volume). Dashboard and datasource changes
+  made in the panel persist across deploys and are not re-provisioned from local files.
 
 ## Samba (system-level on NAS)
 
