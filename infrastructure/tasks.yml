@@ -9,9 +9,8 @@
     - "infrastructure"
     - "infrastructure/nginx_proxy/data"
     - "infrastructure/nginx_proxy/letsencrypt"
-    - "infrastructure/authentik/media"
+    - "infrastructure/authentik/data"
     - "infrastructure/authentik/custom-templates"
-    - "infrastructure/authentik/database"
     - "infrastructure/authentik/certs"
 
 - name: Copy infrastructure docker-compose.yml
