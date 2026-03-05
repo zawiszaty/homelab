@@ -36,6 +36,14 @@
     dest: "{{ infrastructure_dir }}/observability"
     mode: "0755"
 
+- name: Write observability .env
+  template:
+    src: "{{ playbook_dir }}/templates/observability.env.j2"
+    dest: "{{ infrastructure_dir }}/observability/.env"
+    owner: "{{ remote_user }}"
+    group: "{{ remote_user }}"
+    mode: "0600"
+
 - name: Docker compose up -d (observability)
   command: docker compose up -d --force-recreate
   args:

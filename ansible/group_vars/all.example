@@ -2,6 +2,8 @@ remote_dir: /mnt/storage
 remote_user: <user>
 authentik_pg_pass: "" // openssl rand -base64 36 | tr -d '\n'
 authentik_secret_key: "" // openssl rand -base64 60 | tr -d '\n'
+grafana_oauth_client_id: ""
+grafana_oauth_client_secret: ""
 samba_user: "<user>"
 samba_password: "" # set this in all.yml before enabling Samba
 samba_workgroup: "WORKGROUP"
