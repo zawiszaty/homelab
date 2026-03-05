@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BACKUP_ROOT="{{ backup_dir }}"
+INFRA_DIR="{{ remote_dir }}/infrastructure"
+IMMICH_DIR="{{ remote_dir }}/immich"
+RETENTION_DAYS="{{ backup_retention_days }}"
+TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
+
+INFRA_OUT_DIR="${BACKUP_ROOT}/postgres/infrastructure"
+IMMICH_OUT_DIR="${BACKUP_ROOT}/postgres/immich"
+
+mkdir -p "${INFRA_OUT_DIR}" "${IMMICH_OUT_DIR}"
+
+(
+  cd "${INFRA_DIR}"
+  set -a
+  source .env
+  set +a
+
+  docker compose exec -T -e PGPASSWORD="${PG_PASS}" postgresql \
+    pg_dump -U "${PG_USER:-authentik}" -d "${PG_DB:-authentik}" -Fc
+) > "${INFRA_OUT_DIR}/authentik-${TIMESTAMP}.dump"
+
+(
+  cd "${IMMICH_DIR}"
+  set -a
+  source .env
+  set +a
+
+  docker compose exec -T -e PGPASSWORD="${DB_PASSWORD}" database \
+    pg_dump -U "${DB_USERNAME}" -d "${DB_DATABASE_NAME}" -Fc
+) > "${IMMICH_OUT_DIR}/immich-${TIMESTAMP}.dump"
+
+find "${INFRA_OUT_DIR}" -type f -name '*.dump' -mtime +"${RETENTION_DAYS}" -delete
+find "${IMMICH_OUT_DIR}" -type f -name '*.dump' -mtime +"${RETENTION_DAYS}" -delete
+
+if [ "{{ backup_offsite_enabled | ternary('true', 'false') }}" = "true" ]; then
+  set -a
+  source /etc/homelab/restic.env
+  set +a
+
+  restic snapshots >/dev/null
+  restic backup "${BACKUP_ROOT}/postgres"
+  restic forget --prune \
+    --keep-daily {{ backup_restic_keep_daily }} \
+    --keep-weekly {{ backup_restic_keep_weekly }} \
+    --keep-monthly {{ backup_restic_keep_monthly }}
+fi

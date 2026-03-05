@@ -20,6 +20,9 @@
           - curl
           - gnupg
           - lsb-release
+          - cron
+          - restic
+          - rclone
         state: present
         update_cache: true
 

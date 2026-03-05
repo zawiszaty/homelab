@@ -62,3 +62,10 @@ Requires Ansible and SSH access to the hosts listed in the inventory.
 1) Add hosts to the inventory.
 2) Fill in group vars.
 3) Run `./run.sh` to install Docker and deploy stacks.
+
+## Backups
+
+- PostgreSQL backups (Authentik + Immich) can be enabled via variables in
+  `ansible/group_vars/all.yml`.
+- Optional offsite backup to Google Drive is supported through Restic + Rclone.
+- Details: `docs/backup-and-restore.md`.

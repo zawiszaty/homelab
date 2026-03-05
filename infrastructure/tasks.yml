@@ -48,3 +48,45 @@
   command: docker compose up -d --force-recreate
   args:
     chdir: "{{ infrastructure_dir }}/observability"
+
+- name: Ensure backup directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+  loop:
+    - "{{ backup_dir }}"
+    - "{{ backup_dir }}/postgres"
+    - "{{ backup_dir }}/postgres/infrastructure"
+    - "{{ backup_dir }}/postgres/immich"
+    - /etc/homelab
+  when: backup_enabled
+
+- name: Install database backup script
+  template:
+    src: "{{ playbook_dir }}/templates/db-backup.sh.j2"
+    dest: /usr/local/bin/homelab-db-backup
+    owner: root
+    group: root
+    mode: "0750"
+  when: backup_enabled
+
+- name: Install restic environment file
+  template:
+    src: "{{ playbook_dir }}/templates/restic.env.j2"
+    dest: /etc/homelab/restic.env
+    owner: root
+    group: root
+    mode: "0600"
+  when: backup_enabled and backup_offsite_enabled
+
+- name: Configure database backup cron
+  cron:
+    name: "Homelab DB backup"
+    user: root
+    minute: "{{ backup_cron_minute }}"
+    hour: "{{ backup_cron_hour }}"
+    job: "/usr/local/bin/homelab-db-backup >> /var/log/homelab-db-backup.log 2>&1"
+  when: backup_enabled

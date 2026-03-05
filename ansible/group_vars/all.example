@@ -4,6 +4,18 @@ authentik_pg_pass: "" // openssl rand -base64 36 | tr -d '\n'
 authentik_secret_key: "" // openssl rand -base64 60 | tr -d '\n'
 grafana_oauth_client_id: ""
 grafana_oauth_client_secret: ""
+backup_enabled: true
+backup_dir: "{{ remote_dir }}/backups"
+backup_retention_days: 30
+backup_cron_hour: "3"
+backup_cron_minute: "15"
+backup_offsite_enabled: false
+backup_restic_repository: "rclone:gdrive:homelab-backups"
+backup_restic_password: ""
+backup_rclone_config_path: "/root/.config/rclone/rclone.conf"
+backup_restic_keep_daily: 14
+backup_restic_keep_weekly: 8
+backup_restic_keep_monthly: 12
 samba_user: "<user>"
 samba_password: "" # set this in all.yml before enabling Samba
 samba_workgroup: "WORKGROUP"
