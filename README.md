@@ -69,3 +69,8 @@ Requires Ansible and SSH access to the hosts listed in the inventory.
   `ansible/group_vars/all.yml`.
 - Optional offsite backup to Google Drive is supported through Restic + Rclone.
 - Details: `docs/backup-and-restore.md`.
+
+## Grafana As Code
+
+- Provisioned dashboards live in `infrastructure/observability/grafana/dashboards`.
+- New health dashboard: `Homelab Healthcheck` (backup freshness + monitored targets).

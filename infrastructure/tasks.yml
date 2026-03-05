@@ -36,6 +36,11 @@
     dest: "{{ infrastructure_dir }}/observability"
     mode: "0755"
 
+- name: Remove legacy Grafana alerting rules directory
+  file:
+    path: "{{ infrastructure_dir }}/observability/grafana/provisioning/alerting/rules"
+    state: absent
+
 - name: Write observability .env
   template:
     src: "{{ playbook_dir }}/templates/observability.env.j2"
@@ -57,12 +62,13 @@
     group: root
     mode: "0750"
   loop:
-    - "{{ backup_dir }}"
-    - "{{ backup_dir }}/postgres"
-    - "{{ backup_dir }}/postgres/infrastructure"
-    - "{{ backup_dir }}/postgres/immich"
+    - "{{ backup_dir | default(remote_dir ~ '/backups') }}"
+    - "{{ (backup_dir | default(remote_dir ~ '/backups')) ~ '/postgres' }}"
+    - "{{ (backup_dir | default(remote_dir ~ '/backups')) ~ '/postgres/infrastructure' }}"
+    - "{{ (backup_dir | default(remote_dir ~ '/backups')) ~ '/postgres/immich' }}"
+    - "{{ node_exporter_textfile_dir | default('/var/lib/node_exporter/textfile_collector') }}"
     - /etc/homelab
-  when: backup_enabled
+  when: backup_enabled | default(false)
 
 - name: Install database backup script
   template:
@@ -71,7 +77,7 @@
     owner: root
     group: root
     mode: "0750"
-  when: backup_enabled
+  when: backup_enabled | default(false)
 
 - name: Install restic environment file
   template:
@@ -80,7 +86,7 @@
     owner: root
     group: root
     mode: "0600"
-  when: backup_enabled and backup_offsite_enabled
+  when: (backup_enabled | default(false)) and (backup_offsite_enabled | default(false))
 
 - name: Configure database backup cron
   cron:
@@ -89,4 +95,4 @@
     minute: "{{ backup_cron_minute }}"
     hour: "{{ backup_cron_hour }}"
     job: "/usr/local/bin/homelab-db-backup >> /var/log/homelab-db-backup.log 2>&1"
-  when: backup_enabled
+  when: backup_enabled | default(false)

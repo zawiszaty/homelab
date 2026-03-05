@@ -6,11 +6,32 @@ INFRA_DIR="{{ remote_dir }}/infrastructure"
 IMMICH_DIR="{{ remote_dir }}/immich"
 RETENTION_DAYS="{{ backup_retention_days }}"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
+TEXTFILE_DIR="{{ node_exporter_textfile_dir | default('/var/lib/node_exporter/textfile_collector') }}"
+METRICS_FILE="${TEXTFILE_DIR}/homelab_backup.prom"
+LAST_SUCCESS_TS=0
+STATUS=0
 
 INFRA_OUT_DIR="${BACKUP_ROOT}/postgres/infrastructure"
 IMMICH_OUT_DIR="${BACKUP_ROOT}/postgres/immich"
 
-mkdir -p "${INFRA_OUT_DIR}" "${IMMICH_OUT_DIR}"
+mkdir -p "${INFRA_OUT_DIR}" "${IMMICH_OUT_DIR}" "${TEXTFILE_DIR}"
+
+if [ -f "${METRICS_FILE}" ]; then
+  LAST_SUCCESS_TS="$(awk '/^homelab_backup_last_success_timestamp_seconds /{print $2; exit}' "${METRICS_FILE}" || echo 0)"
+fi
+
+write_metrics() {
+  local now_ts
+  now_ts="$(date +%s)"
+  cat > "${METRICS_FILE}.tmp" <<EOF
+homelab_backup_last_run_timestamp_seconds ${now_ts}
+homelab_backup_last_success_timestamp_seconds ${LAST_SUCCESS_TS}
+homelab_backup_status ${STATUS}
+EOF
+  mv "${METRICS_FILE}.tmp" "${METRICS_FILE}"
+}
+
+trap write_metrics EXIT
 
 (
   cd "${INFRA_DIR}"
@@ -47,3 +68,6 @@ if [ "{{ backup_offsite_enabled | ternary('true', 'false') }}" = "true" ]; then
     --keep-weekly {{ backup_restic_keep_weekly }} \
     --keep-monthly {{ backup_restic_keep_monthly }}
 fi
+
+LAST_SUCCESS_TS="$(date +%s)"
+STATUS=1

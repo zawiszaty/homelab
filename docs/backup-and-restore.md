@@ -42,6 +42,8 @@ Set in `ansible/group_vars/all.yml`:
 - Dumps are stored in:
   - `{{ backup_dir }}/postgres/infrastructure`
   - `{{ backup_dir }}/postgres/immich`
+- Backup status metrics are exported for Prometheus in:
+  - `{{ node_exporter_textfile_dir }}/homelab_backup.prom`
 
 ## Manual run
 ```bash
