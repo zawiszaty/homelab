@@ -101,3 +101,17 @@ services:
       volumes:
           - ./jellyseerr/data:/app/config
           - ./jellyseerr/jelly-bridge:/data/JellyBridge
+
+  autosubsync:
+    image: mrorbitman/subsyncarr:0.0.8
+    container_name: autosubsync
+    environment:
+      - TZ=Etc/UTC
+      - CRON_SCHEDULE=0 3 * * *
+      - SCAN_PATHS=/movies,/tv
+      - INCLUDE_ENGINES=ffsubsync,autosubsync
+      - MAX_CONCURRENT_SYNC_TASKS=3
+    volumes:
+      - ./movies:/movies
+      - ./tv:/tv
+    restart: unless-stopped

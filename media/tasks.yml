@@ -29,6 +29,14 @@
   args:
     chdir: "{{ remote_dir }}"
 
+- name: Ensure autosubsync is started every 6 hours
+  cron:
+    name: "Ensure autosubsync is running"
+    user: root
+    minute: "0"
+    hour: "*/6"
+    job: "cd {{ remote_dir }} && docker compose up -d autosubsync"
+
 - name: Clone flare-bypasser repository
   git:
     repo: https://github.com/yoori/flare-bypasser.git

@@ -270,14 +270,14 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "count(container_last_seen{name!=\"\"})",
+          "expr": "sum(up)",
           "instant": true,
-          "legendFormat": "containers",
+          "legendFormat": "targets up",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "Containers Observed By cAdvisor",
+      "title": "Prometheus Targets Up",
       "type": "stat"
     },
     {

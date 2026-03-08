@@ -66,8 +66,16 @@
     - "{{ (backup_dir | default(remote_dir ~ '/backups')) ~ '/postgres' }}"
     - "{{ (backup_dir | default(remote_dir ~ '/backups')) ~ '/postgres/infrastructure' }}"
     - "{{ (backup_dir | default(remote_dir ~ '/backups')) ~ '/postgres/immich' }}"
-    - "{{ node_exporter_textfile_dir | default('/var/lib/node_exporter/textfile_collector') }}"
     - /etc/homelab
+  when: backup_enabled | default(false)
+
+- name: Ensure node-exporter textfile collector directory exists
+  file:
+    path: "{{ node_exporter_textfile_dir | default('/var/lib/node_exporter/textfile_collector') }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
   when: backup_enabled | default(false)
 
 - name: Install database backup script
