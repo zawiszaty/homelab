@@ -29,13 +29,13 @@
   args:
     chdir: "{{ remote_dir }}"
 
-- name: Ensure autosubsync is started every 6 hours
+- name: Restart autosubsync every 6 hours as a watchdog
   cron:
-    name: "Ensure autosubsync is running"
+    name: "Restart autosubsync watchdog"
     user: root
     minute: "0"
     hour: "*/6"
-    job: "cd {{ remote_dir }} && docker compose up -d autosubsync"
+    job: "cd {{ remote_dir }} && timeout 120 docker compose restart autosubsync >/dev/null 2>&1"
 
 - name: Clone flare-bypasser repository
   git:
