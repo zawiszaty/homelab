@@ -4,6 +4,15 @@ authentik_pg_pass: "" // openssl rand -base64 36 | tr -d '\n'
 authentik_secret_key: "" // openssl rand -base64 60 | tr -d '\n'
 grafana_oauth_client_id: ""
 grafana_oauth_client_secret: ""
+n8n_encryption_key: "" # openssl rand -hex 32
+n8n_basic_auth_user: "admin"
+n8n_basic_auth_password: "" # set a strong password
+n8n_basic_auth_active: "true"
+n8n_host: "n8n.szynkowydom.pl"
+n8n_protocol: "https"
+n8n_webhook_url: "https://n8n.szynkowydom.pl/"
+n8n_timezone: "Europe/Warsaw"
+n8n_secure_cookie: "true"
 backup_enabled: true
 backup_dir: "{{ remote_dir }}/backups"
 backup_retention_days: 30

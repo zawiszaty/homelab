@@ -74,6 +74,26 @@ services:
     volumes:
       - ./infrastructure/nginx_proxydata/data:/data
       - ./infrastructure/nginx_proxydata/letsencrypt:/etc/letsencrypt
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:1.88.0
+    env_file:
+      - .env
+    environment:
+      N8N_HOST: ${N8N_HOST:-localhost}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
+      N8N_WEBHOOK_URL: ${N8N_WEBHOOK_URL:-}
+      GENERIC_TIMEZONE: ${N8N_TIMEZONE:-Europe/Warsaw}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?n8n encryption key required}
+      N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE:-true}
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:?n8n basic auth password required}
+      N8N_SECURE_COOKIE: ${N8N_SECURE_COOKIE:-false}
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./n8n/data:/home/node/.n8n
+    restart: unless-stopped
 volumes:
   database:
     driver: local

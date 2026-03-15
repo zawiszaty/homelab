@@ -11,8 +11,8 @@ on target hosts and deploys:
 
 - Media stack: Jellyfin, Sonarr, Radarr, Prowlarr, qBittorrent, Bazarr,
   Jellyseerr, plus a flare-bypasser side stack.
-- Infrastructure stack: reverse proxy, Authentik, and the observability stack
-  (Prometheus, Loki, Grafana, Promtail, node-exporter).
+- Infrastructure stack: reverse proxy, Authentik, n8n, and the observability
+  stack (Prometheus, Loki, Grafana, Promtail, node-exporter).
 - Immich: photo management stack.
 
 ## Repository layout

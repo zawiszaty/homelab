@@ -12,6 +12,7 @@
     - "infrastructure/authentik/data"
     - "infrastructure/authentik/custom-templates"
     - "infrastructure/authentik/certs"
+    - "infrastructure/n8n/data"
 
 - name: Copy infrastructure docker-compose.yml
   copy:
