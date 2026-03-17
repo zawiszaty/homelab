@@ -27,6 +27,20 @@ services:
     ports:
       - 7878:7878
     restart: unless-stopped
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:3.0.1.4866-ls10
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./lidarr/data:/config
+      - ./music:/music
+      - ./downloads:/downloads
+    ports:
+      - 8686:8686
+    restart: unless-stopped
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:2.3.0
     container_name: prowlarr
@@ -82,6 +96,7 @@ services:
       - ./jellyfin/data:/config
       - ./tv:/data/tvshows
       - ./movies:/data/movies
+      - ./music:/data/music
       - ./jellyseerr/jelly-bridge:/data/JellyBridge
     ports:
       - 8096:8096

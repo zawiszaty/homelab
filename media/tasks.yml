@@ -9,8 +9,10 @@
     - downloads
     - tv
     - movies
+    - music
     - sonarr/data
     - radarr/data
+    - lidarr/data
     - prowlarr/data
     - qbittorrent/data
     - jellyfin/data
