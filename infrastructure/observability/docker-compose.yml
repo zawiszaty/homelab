@@ -52,6 +52,8 @@ services:
 
   grafana:
     image: grafana/grafana:12.4.1
+    env_file:
+      - .env
     environment:
       GF_AUTH_GENERIC_OAUTH_ENABLED: "true"
       GF_AUTH_GENERIC_OAUTH_NAME: "authentik"
