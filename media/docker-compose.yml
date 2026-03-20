@@ -1,6 +1,6 @@
 services:
   sonarr:
-    image: lscr.io/linuxserver/sonarr:amd64-4.0.16
+    image: lscr.io/linuxserver/sonarr:amd64-4.0.17
     container_name: sonarr
     environment:
       - PUID=1000
