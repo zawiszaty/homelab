@@ -17,7 +17,7 @@ services:
     networks: [observability]
 
   promtail:
-    image: grafana/promtail:3.6.7
+    image: grafana/promtail:3.6.8
     command: -config.file=/etc/promtail/promtail-config.yml
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
