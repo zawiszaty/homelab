@@ -7,7 +7,7 @@ volumes:
 
 services:
   loki:
-    image: grafana/loki:3.6.7
+    image: grafana/loki:3.7.1
     command: -config.file=/etc/loki/loki-config.yml
     volumes:
       - ./loki/loki-config.yml:/etc/loki/loki-config.yml:ro
