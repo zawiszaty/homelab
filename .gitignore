@@ -1,2 +1,3 @@
 ansible/group_vars/all.yml
 .env
+.codex
