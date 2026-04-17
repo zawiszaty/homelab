@@ -75,7 +75,7 @@ services:
       - ./infrastructure/nginx_proxydata/data:/data
       - ./infrastructure/nginx_proxydata/letsencrypt:/etc/letsencrypt
   n8n:
-    image: docker.n8n.io/n8nio/n8n:2.14.2
+    image: docker.n8n.io/n8nio/n8n:2.16.1
     env_file:
       - .env
     environment:
