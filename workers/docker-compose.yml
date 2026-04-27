@@ -3,7 +3,7 @@ networks:
 
 services:
   node-exporter:
-    image: prom/node-exporter:v1.10.2
+    image: prom/node-exporter:v1.11.1
     pid: host
     volumes:
       - /proc:/host/proc:ro
