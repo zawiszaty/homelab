@@ -414,3 +414,117 @@ groups:
               maxDataPoints: 43200
               refId: B
               type: threshold
+
+      - uid: minecraft-player-joined
+        title: Minecraft player joined
+        condition: B
+        noDataState: OK
+        execErrState: Error
+        for: 0s
+        annotations:
+          summary: "Minecraft player joined on {{ $labels.server }}"
+          description: "Player {{ $labels.player }} joined {{ $labels.server }} in the last minute."
+        labels:
+          severity: warning
+          service: minecraft
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 120
+              to: 0
+            datasourceUid: P8E80F9AEF21F6940
+            model:
+              datasource:
+                type: loki
+                uid: P8E80F9AEF21F6940
+              editorMode: code
+              expr: sum by (server, player) (count_over_time({job="minecraft-logs", category="join"}[1m]))
+              intervalMs: 1000
+              maxDataPoints: 43200
+              queryType: instant
+              refId: A
+          - refId: B
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: "__expr__"
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: "__expr__"
+                uid: "__expr__"
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: threshold
+
+      - uid: minecraft-gamemode-change
+        title: Minecraft gamemode change
+        condition: B
+        noDataState: OK
+        execErrState: Error
+        for: 0s
+        annotations:
+          summary: "Minecraft gamemode change on {{ $labels.server }}"
+          description: "Player {{ $labels.player }} triggered a gamemode-related log entry on {{ $labels.server }} in the last 5 minutes."
+        labels:
+          severity: warning
+          service: minecraft
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: P8E80F9AEF21F6940
+            model:
+              datasource:
+                type: loki
+                uid: P8E80F9AEF21F6940
+              editorMode: code
+              expr: sum by (server, player) (count_over_time({job="minecraft-logs", category="gamemode"}[5m]))
+              intervalMs: 1000
+              maxDataPoints: 43200
+              queryType: instant
+              refId: A
+          - refId: B
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: "__expr__"
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: "__expr__"
+                uid: "__expr__"
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: threshold
