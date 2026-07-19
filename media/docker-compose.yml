@@ -54,7 +54,7 @@ services:
       - 9696:9696
     restart: unless-stopped
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:5.2.0
+    image: lscr.io/linuxserver/qbittorrent:5.2.3
     container_name: qbittorrent
     environment:
       - PUID=1000
