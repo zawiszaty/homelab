@@ -26,6 +26,12 @@
     dest: "{{ remote_dir }}/docker-compose.yml"
     mode: "0644"
 
+- name: Copy TVP Stream service
+  copy:
+    src: ../media/tvp-stream/
+    dest: "{{ remote_dir }}/tvp-stream/"
+    mode: "0644"
+
 - name: Docker compose up -d
   command: docker compose up -d --force-recreate
   args:

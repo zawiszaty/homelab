@@ -105,6 +105,22 @@ services:
       - 1900:1900/udp 
     restart: unless-stopped
 
+  tvp-stream:
+    build:
+      context: ./tvp-stream
+    container_name: tvp-stream
+    environment:
+      - TVP_STREAM_BASE_URL=http://tvp-stream:8080
+      - TVP1_URL=https://vod.tvp.pl/live,1/tvp-1,399697
+      - TVP2_URL=https://vod.tvp.pl/live,1/tvp-2,399698
+      - IPTV_ORG_URL=https://iptv-org.github.io/iptv/languages/pol.m3u
+      - EPG_URL=https://epgshare01.online/epgshare01/epg_ripper_PL1.xml.gz
+      - EPG_CACHE_SECONDS=43200
+      - STREAM_QUALITY=best
+    ports:
+      - 8097:8080
+    restart: unless-stopped
+
   jellyseerr:
       image: fallenbagel/jellyseerr:2.7.3
       container_name: jellyseerr
