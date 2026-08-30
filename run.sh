@@ -22,7 +22,7 @@ trap cleanup EXIT
 
 cd "$ROOT_DIR/ansible"
 
-cmd=(ansible-playbook -i inventory.ini deploy.yml workers.yml samba.yml)
+cmd=(ansible-playbook -i inventory.ini deploy.yml workers.yml samba.yml our-new-home.yml)
 
 if [ -n "${ANSIBLE_VAULT_PASSWORD:-}" ]; then
   VAULT_PASSWORD_FILE="$(mktemp)"

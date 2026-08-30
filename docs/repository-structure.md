@@ -6,6 +6,7 @@
 - `infrastructure/`: infrastructure stack Compose file and observability config.
 - `immich/`: Immich Compose file and stack tasks.
 - `workers/`: worker Compose file.
+- `our-new-home/`: deployment tasks for the adjacent Our New Home application repository.
 
 ## Important files
 - `run.sh`: one-shot runner for primary playbooks.

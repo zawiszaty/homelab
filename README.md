@@ -6,6 +6,7 @@ on target hosts and deploys:
 - media stack (Jellyfin, *arr apps, qBittorrent, Jellyseerr, etc.)
 - infrastructure (reverse proxy, Authentik, observability stack)
 - Immich
+- Our New Home (cotygodniowy agent wyszukiwania nieruchomości)
 
 ## What gets deployed
 
@@ -21,6 +22,7 @@ on target hosts and deploys:
 - `media/` docker-compose + Ansible tasks for the media stack.
 - `infrastructure/` docker-compose + observability stack.
 - `immich/` docker-compose + Ansible tasks for Immich.
+- `our-new-home/` Ansible tasks pobierające prywatne repo aplikacji z GitHuba.
 - `workers/` docker-compose for worker observability.
 - `run.sh` one-shot runner for the main playbooks.
 
@@ -37,6 +39,10 @@ cp ansible/group_vars/all.example ansible/group_vars/all.yml
 ```
 
 Requires Ansible and SSH access to the hosts listed in the inventory.
+
+Tylko agent nieruchomości można wdrożyć poleceniem `./deploy-our-new-home.sh`.
+Kod jest klonowany z `git@github.com:zawiszaty/our-new-home.git` przez osobny deploy key.
+Plik `.env` jest generowany na serwerze z sekretów `our_new_home_*` w Ansible Vault.
 
 ## Configuration notes
 

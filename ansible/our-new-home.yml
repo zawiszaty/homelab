@@ -1,0 +1,28 @@
+- name: Deploy Our New Home
+  hosts: servers
+  become: true
+
+  tasks:
+    - name: Ensure root SSH directory exists
+      file:
+        path: /root/.ssh
+        state: directory
+        mode: "0700"
+
+    - name: Create read-only GitHub deploy key
+      openssh_keypair:
+        path: /root/.ssh/our-new-home-deploy
+        type: ed25519
+        comment: our-new-home@homelab
+        mode: "0600"
+      register: our_new_home_deploy_key
+
+    - name: Show deploy key when GitHub access is not configured yet
+      debug:
+        msg: >-
+          Add this public key as a read-only deploy key to zawiszaty/our-new-home:
+          {{ our_new_home_deploy_key.public_key }}
+      when: our_new_home_register_deploy_key | default(false) | bool
+
+    - name: Deploy Our New Home stack tasks
+      import_tasks: ../our-new-home/tasks.yml

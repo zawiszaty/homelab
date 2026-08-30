@@ -1,0 +1,40 @@
+- name: Ensure GitHub is trusted for Our New Home deploy key
+  known_hosts:
+    name: github.com
+    key: "{{ lookup('pipe', 'ssh-keyscan -t ed25519 github.com') }}"
+    path: /root/.ssh/known_hosts
+
+- name: Clone or update Our New Home from GitHub
+  git:
+    repo: git@github.com:zawiszaty/our-new-home.git
+    dest: "{{ remote_dir }}/our-new-home"
+    version: main
+    update: true
+    force: false
+    key_file: /root/.ssh/our-new-home-deploy
+    accept_hostkey: true
+
+- name: Render Our New Home secrets from Ansible Vault
+  template:
+    src: templates/our-new-home.env.j2
+    dest: "{{ remote_dir }}/our-new-home/.env"
+    owner: "{{ remote_user }}"
+    group: "{{ remote_user }}"
+    mode: "0600"
+  no_log: true
+
+- name: Start Our New Home stack
+  command: docker compose up -d --build --force-recreate
+  args:
+    chdir: "{{ remote_dir }}/our-new-home"
+
+- name: Check Our New Home containers
+  command: docker compose ps --format json
+  args:
+    chdir: "{{ remote_dir }}/our-new-home"
+  changed_when: false
+  register: our_new_home_containers
+
+- name: Show Our New Home container status
+  debug:
+    var: our_new_home_containers.stdout_lines

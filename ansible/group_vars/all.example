@@ -1,5 +1,11 @@
 remote_dir: /mnt/storage
 remote_user: <user>
+# Dodaj te wartości do all.yml przez `ansible-vault encrypt_string`.
+our_new_home_otodom_key: ""
+our_new_home_slack_bot_token: ""
+our_new_home_slack_app_token: ""
+our_new_home_slack_channel_id: ""
+our_new_home_postgres_password: ""
 authentik_pg_pass: "" // openssl rand -base64 36 | tr -d '\n'
 authentik_secret_key: "" // openssl rand -base64 60 | tr -d '\n'
 grafana_oauth_client_id: ""
