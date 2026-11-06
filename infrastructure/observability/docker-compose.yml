@@ -51,7 +51,7 @@ services:
     networks: [observability]
 
   grafana:
-    image: grafana/grafana:13.2.4
+    image: grafana/grafana:13.3.0
     env_file:
       - .env
     environment:
