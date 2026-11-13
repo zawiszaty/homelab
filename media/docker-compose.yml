@@ -134,7 +134,7 @@ services:
           - ./jellyseerr/jelly-bridge:/data/JellyBridge
 
   autosubsync:
-    image: mrorbitman/subsyncarr:1.4.0
+    image: mrorbitman/subsyncarr:1.5.0
     container_name: autosubsync
     environment:
       - TZ=Etc/UTC
